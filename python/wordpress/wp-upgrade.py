@@ -113,7 +113,7 @@ for site in sites:
 	if os.path.exists(akismet_path): shutil.rmtree(akismet_path)
 	os.makedirs(akismet_path)
 	commands.getoutput("cp -r '%s'/* '%s'" % (akismet_directory, akismet_path))
-	print "cp -r '%s/'*' '%s'" % (akismet_directory, akismet_path)
+	# print "cp -r '%s'/*' '%s'" % (akismet_directory, akismet_path)
 
 	## replace wp-includes and wp-admin
 	site_wp_include_path = "%s/wp-includes" % (path)
