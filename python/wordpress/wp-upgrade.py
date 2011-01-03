@@ -6,6 +6,7 @@
 ## Paul Schreiber <misc at paulschreiber dot com>
 ## http://paulschreiber.com/
 ## 1.0  -- 3 January 2011
+## 1.01  -- 3 January 2011; fixed Akismet copying
 ##
 ## Licensed under the MIT License
 ##
@@ -107,6 +108,13 @@ for site in sites:
 
 	print "Updating %s..." % (url)
 
+	## replace Akismet
+	akismet_path = "%s/wp-content/plugins/akismet" % (path)
+	if os.path.exists(akismet_path): shutil.rmtree(akismet_path)
+	os.makedirs(akismet_path)
+	commands.getoutput("cp -r '%s'/* '%s'" % (akismet_directory, akismet_path))
+	print "cp -r '%s/'*' '%s'" % (akismet_directory, akismet_path)
+
 	## replace wp-includes and wp-admin
 	site_wp_include_path = "%s/wp-includes" % (path)
 	site_wp_admin_path = "%s/wp-admin" % (path)
@@ -115,26 +123,19 @@ for site in sites:
 	shutil.copytree(wp_admin_directory, site_wp_admin_path)
 	shutil.copytree(wp_include_directory, site_wp_include_path)
 	
-	## replace Akismet
-	akismet_path = "%s/wp-content/plugins/akismet" % (path)
-	if os.path.exists(akismet_path): shutil.rmtree(akismet_path)
-	os.makedirs(akismet_path)
-	commands.getoutput("cp -r '%s/*' '%s'" % (akismet_directory, akismet_path))
-	# print "cp -r '%s/*' '%s'" % (akismet_directory, akismet_path)
-
 	## replace WordPress .php files
 	commands.getoutput("cp -rf '%s/*.php' '%s'" % (wp_temp_directory, path))
 	# print "cp -rf '%s/*.php' '%s'" % (wp_temp_directory, path)
-
+	
 	## create the upload directory, if needed
 	upload_path = "%s/wp-content/uploads" % (path)
 	if not os.path.exists(upload_path): os.makedirs(upload_path)
-
+	
 	## fix permissions
 	commands.getoutput("chown -R %s:%s '%s'" % (user, user, path))
 	commands.getoutput("chown -R %s:www-data '%s/wp-content/uploads'" % (user, path))
 	commands.getoutput("chgrp -R g+w '%s/wp-content/uploads'" % (path))
-
+	
 	# print "chown -R %s:%s '%s'" % (user, user, path)
 	# print "chown -R %s:www-data '%s/wp-content/uploads'" % (user, path)
 	# print "chgrp -R g+w '%s/wp-content/uploads'" % (path)
