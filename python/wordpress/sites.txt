@@ -1,0 +1,2 @@
+/var/www/foobar.ca	foobar.ca	foobar@gmail.com	foobar
+/var/www/smelly.ca/blog	smelly.ca/blog	smelly@gmail.com	smelly

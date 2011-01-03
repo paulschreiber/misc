@@ -1,0 +1,17 @@
+From: "Joe Sysadmin" <joesysadmin@gmail.com>
+To: __recipient__
+Subject: Your WordPress installation has been updated to __version__
+
+This is a quick note to let you know that your WordPress site or blog has been upgraded to version __version__.
+
+For more information on this version, see:
+http://codex.wordpress.org/Version___version__
+
+You need to upgrade your site's database. To do so, log in:
+http://__url__/wp-login.php
+...and then click the Upgrade button.
+
+This upgrade should not affect the functionality of your site. If you find that anything doesn't work as expected, please let me know right away.
+
+Thanks!
+Joe
