@@ -143,6 +143,10 @@ def main():
 
 	if wp_version == None:
 		usage()
+		
+	if wordpress == False and akismet == False:
+		print "You must install either WordPress or Akismet."
+		exit()
 
 	##
 	## Confirm the existence of required files
