@@ -8,6 +8,10 @@
 ## 1.0  -- 3 January 2011
 ## 1.01 -- 3 January 2011; fixed Akismet copying
 ## 1.1  -- 3 January 2011; refactoring; require root
+## 1.2  -- 4 February 2011;
+##  * can specify --akismet-only or --wordpress-only
+##  * suppress notifications with --quiet
+##  * now use --path for path
 ##
 ## Licensed under the MIT License
 ##
@@ -19,6 +23,10 @@ import commands
 import sys
 import tempfile
 import shutil
+import getopt
+
+svn             = "/usr/bin/svn"
+sendmail        = "/usr/sbin/sendmail"
 
 def read_site_list(sites_path):
 	sites = []
@@ -41,7 +49,8 @@ def send_email_notification(notice_path, recipient, wp_version, url):
 	p.close()
 
 
-def fetch_wp(temp_directory):
+def fetch_wp(wp_version, temp_directory):
+	wp_svn_url = "http://svn.automattic.com/wordpress/tags/%s/" % (wp_version)
 	os.chdir(temp_directory)
 	print "Fetching %s" % (wp_svn_url)
 	commands.getoutput("%s export '%s'" % (svn, wp_svn_url))
@@ -82,84 +91,124 @@ def install_wp(site_path, wp_src_path, user):
 	# print "chgrp -R g+w '%s/wp-content/uploads'" % (site_path)
 
 def fetch_akismet(temp_directory):
+	akismet_svn_url = "http://plugins.svn.wordpress.org/akismet/trunk"
 	os.chdir(temp_directory)
 	print "Fetching %s" % (akismet_svn_url)
 	commands.getoutput("%s export '%s'" % (svn, akismet_svn_url))
 
 
 def install_akismet(site_path, akismet_src_path):
-	## replace Akismet
 	akismet_path = "%s/wp-content/plugins/akismet" % (site_path)
 	if os.path.exists(akismet_path): shutil.rmtree(akismet_path)
 	os.makedirs(akismet_path)
 	commands.getoutput("cp -r '%s'/* '%s'" % (akismet_src_path, akismet_path))
 	# print "cp -r '%s'/*' '%s'" % (akismet_src_path, akismet_path)
 
-
-script_path     = os.getcwd()
-sites_path      = "%s/wp-sites.txt"   % (script_path)
-notice_path     = "%s/wp-upgrade.txt" % (script_path)
-
-if not os.geteuid() == 0:
-	print "Usage: %s must be run as root" % (sys.argv[0])
+def usage():
+	print "Usage: %s wp_version [-q|--quiet] [-a|--akimset-only] [-w|--wordpress-only] [-p|--path=temp_path]" % (sys.argv[0])
 	sys.exit()
 
-if len(sys.argv) < 2:
-	print "Usage: %s wp_version [temp_path]" % (sys.argv[0])
-	sys.exit()
+def main():
+	try:
+		opts, args = getopt.getopt(sys.argv[2:], "qawp:", ["quiet", "akimset-only", "wordpress-only", "path="])
+	except getopt.GetoptError, err:
+		# print help information and exit:
+		print str(err) # will print something like "option -a not recognized"
+		usage()
 
-if not os.path.exists(notice_path):
-	print "Cannot find upgrade notice (%s)" % (notice_path)
-	sys.exit()
+	wordpress = True
+	akismet = True
+	requested_temp_path = None
+	notify = True
+	if len(sys.argv) > 1:
+		wp_version = sys.argv[1]
+	else:
+		wp_version = None
+		
+	for o, a in opts:
+		if o in ("-q", "--quiet"):
+			notify = False
+		elif o in ("-a", "--akismet-only"):
+			wordpress = False
+		elif o in ("-w", "--wordpress-only"):
+			akismet = False
+		elif o in ("-p", "--path"):
+			requested_temp_path = a
+		else:
+			assert False, "unhandled option"
 
-if not os.path.exists(sites_path):
-	print "Cannot find site list (%s)" % (sites_path)
-	sys.exit()
+	if not os.geteuid() == 0:
+		print "%s must be run as root" % (sys.argv[0])
+		sys.exit()
 
-wp_version      = sys.argv[1]
-wp_svn_url      = "http://svn.automattic.com/wordpress/tags/%s/" % (wp_version)
-akismet_svn_url = "http://plugins.svn.wordpress.org/akismet/trunk"
-svn             = "/usr/bin/svn"
-sendmail        = "/usr/sbin/sendmail"
+	if wp_version == None:
+		usage()
 
-##
-## Optionally pass in the path to the WordPress and Akismet SVN exports
-## if it exists, use that; else, make a temporary directory and fetch
-## WordPress and Akismet
-##
+	##
+	## Confirm the existence of required files
+	##
+	
+	script_path     = os.getcwd()
 
-remove_temp_directory = True
-temp_directory = None
-if len(sys.argv) > 2:
-	possible_temp_directory = sys.argv[2]
-	if os.path.exists(possible_temp_directory):
-		print "Using %s" % (possible_temp_directory)
-		temp_directory = possible_temp_directory
+	notice_path     = "%s/wp-upgrade.txt" % (script_path)
+	if notify and not os.path.exists(notice_path):
+		print "Cannot find upgrade notice (%s)" % (notice_path)
+		sys.exit()
+
+	sites_path      = "%s/wp-sites.txt"   % (script_path)
+	if not os.path.exists(sites_path):
+		print "Cannot find site list (%s)" % (sites_path)
+		sys.exit()
+
+	##
+	## If --path is specified, assume the sources are there
+	## Otherwise, create a temp directory and fetch the sources
+	##
+	
+	remove_temp_directory = True
+	temp_directory = None
+
+	if requested_temp_path and os.path.exists(requested_temp_path):
+		print "Using %s" % (requested_temp_path)
+		temp_directory = requested_temp_path
 		remove_temp_directory = False
 
-if temp_directory == None:
-	temp_directory = tempfile.mkdtemp()
-	print "Creating %s" % (temp_directory)
-	fetch_wp(temp_directory)
-	fetch_akismet(temp_directory)
 
-akismet_src_path    = "%s/trunk" % (temp_directory)
-wp_src_path         = "%s/%s"    % (temp_directory, wp_version)
+	if temp_directory == None:
+		temp_directory = tempfile.mkdtemp()
+		print "Creating %s" % (temp_directory)
 
-# print "temp directory is %s" % (temp_src_path)
-# print "wp temp directory is %s" % (wp_temp_src_path)
+		if wordpress:
+			fetch_wp(wp_version, temp_directory)
 
-sites = read_site_list(sites_path)
+		if akismet:
+			fetch_akismet(temp_directory)
 
-for site_info in sites:
-	(site_path, url, recipient, user) = site_info
 
-	print "Updating %s..." % (url)
-	install_akismet(site_path, akismet_src_path)
-	install_wp(site_path, wp_src_path, user)
-	
-	print "Emailing %s..." % (recipient)
-	send_email_notification(notice_path, recipient, wp_version, url)
+	##
+	## Install the downloaded components, notifying if needed
+	##
 
-if (remove_temp_directory == True) and os.path.exists(temp_directory):
-	shutil.rmtree(temp_directory)
+	wp_src_path = "%s/%s" % (temp_directory, wp_version)
+	akismet_src_path = "%s/trunk" % (temp_directory)
+
+	sites = read_site_list(sites_path)
+
+	for site_info in sites:
+		(site_path, url, recipient, user) = site_info
+
+		print "Updating %s..." % (url)
+		if akismet: install_akismet(site_path, akismet_src_path)
+		if wordpress: install_wp(site_path, wp_src_path, user)
+
+		if notify:
+			print "Emailing %s..." % (recipient)
+			send_email_notification(notice_path, recipient, wp_version, url)
+
+	if (remove_temp_directory == True) and os.path.exists(temp_directory):
+		shutil.rmtree(temp_directory)
+
+
+if __name__ == "__main__":
+	main()
+
