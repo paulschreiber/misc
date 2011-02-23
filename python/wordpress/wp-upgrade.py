@@ -74,7 +74,7 @@ def install_wp(site_path, wp_src_path, user):
 	shutil.copytree(wp_include_src_path, site_wp_include_path)
 	
 	## replace WordPress .php files
-	commands.getoutput("cp -rf '%s/*.php' '%s'" % (wp_src_path, site_path))
+	commands.getoutput("cp -rf %s/*.php '%s'" % (wp_src_path, site_path))
 	# print "cp -rf '%s/*.php' '%s'" % (wp_src_path, site_path)
 	
 	## create the upload directory, if needed
