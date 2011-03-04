@@ -1,10 +1,10 @@
 Python
 ======
+* *WordPress batch upgrade:* batch upgrade installations of WordPress and Akismet
 * *MySQL backup:* command line tool for optimizing, repairing and backing up MySQL databases.
 * *Toronto Star crossword puzzle fetcher:*	(Mac OS X only) command line tool for downloading the day’s Star PM and printing out the crossword.
 * *Mailman backup:* command line tool for backing up Mailman mailing lists via email.
 * *txt2vcf:* converts tab-delimited text files (.txt) to vCards (.vcf).
-* *wordpress:* batch upgrade installations of WordPress and Akismet
 
 Perl-Objective-C
 ================
