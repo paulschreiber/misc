@@ -1,22 +1,30 @@
 [Adblock Plus 2.0]
-! Checksum: feM5TgocLIO2z+cllARxDw
-! Version: 201312251750
+! Checksum: IloWC3UA1ZzN417QZjxsWg
+! Version: 201312251755
 ! Title: Paul Schreiber's list
-! Last modified: 25 Dec 2013 17:50 UTC
+! Last modified: 25 Dec 2013 17:55 UTC
 ! Expires: 4 days (update frequency)
+@@|http://video.canadiens.nhl.com/videocenter/console?$document
 @@||advisors.tivo.com/$document
-@@||www.hulu.com/$document
-venturebeat.com##FOOTER[class="entry-meta"]
-techpresident.com##DIV[id="pop1"][class="parentDisable pdm"]
-personaldemocracy.com##DIV[id="pop1"][class="parentDisable pdm"]
-@@||www.patriots.com/media-center/$document
 @@||www.49ers.com/media-gallery/$document
+@@||www.hulu.com/$document
+@@||www.patriots.com/media-center/$document
 blog.foreignpolicy.com##DIV[id="TB_window"]
-thecaucus.blogs.nytimes.com##DIV[id="overlay"]
+cdn.tiv.pw##DIV[class="drt"]
+personaldemocracy.com##DIV[id="pop1"][class="parentDisable pdm"]
+techpresident.com##DIV[id="pop1"][class="parentDisable pdm"]
+techpresident.com##[class="parentDisable pdm"]
+thecable.foreignpolicy.com##DIV[id="TB_overlay"][class="TB_overlayBG"]
+thecable.foreignpolicy.com##IFRAME[id="TB_iframeContent"]
+thecable.foreignpolicy.com##IFRAME[id="TB_iframeContent"][name="TB_iframeContent130"]
+thecable.foreignpolicy.com##IFRAME[id="TB_iframeContent"][name="TB_iframeContent878"]
 thecaucus.blogs.nytimes.com##DIV[id="gatewayUnit"]
+thecaucus.blogs.nytimes.com##DIV[id="overlay"]
+venturebeat.com##FOOTER[class="entry-meta"]
+www.coolsport.tv##DIV[class="drt"]
 www.firstrow1.eu##DIV[class="adblockcreatorssuckmydick"]
 www.foreignpolicy.com##IFRAME[id="TB_iframeContent"]
+www.postandcourier.com##DIV[id="gregbox-outer"]
+www.thefirstrow.eu##IMG[src="../../../game_page.png"]
 www.thestar.com##DIV[id="syncronexOverlay"][class="syncronex-overlay-content"]
 www.thestar.com##DIV[id="syncronexOverlayContent"]
-www.coolsport.tv##DIV[class="drt"]
-cdn.tiv.pw##DIV[class="drt"]
