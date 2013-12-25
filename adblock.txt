@@ -1,0 +1,16 @@
+@@||advisors.tivo.com/$document
+@@||www.hulu.com/$document
+venturebeat.com##FOOTER[class="entry-meta"]
+techpresident.com##DIV[id="pop1"][class="parentDisable pdm"]
+personaldemocracy.com##DIV[id="pop1"][class="parentDisable pdm"]
+@@||www.patriots.com/media-center/$document
+@@||www.49ers.com/media-gallery/$document
+blog.foreignpolicy.com##DIV[id="TB_window"]
+thecaucus.blogs.nytimes.com##DIV[id="overlay"]
+thecaucus.blogs.nytimes.com##DIV[id="gatewayUnit"]
+www.firstrow1.eu##DIV[class="adblockcreatorssuckmydick"]
+www.foreignpolicy.com##IFRAME[id="TB_iframeContent"]
+www.thestar.com##DIV[id="syncronexOverlay"][class="syncronex-overlay-content"]
+www.thestar.com##DIV[id="syncronexOverlayContent"]
+www.coolsport.tv##DIV[class="drt"]
+cdn.tiv.pw##DIV[class="drt"]
