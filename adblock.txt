@@ -3,7 +3,7 @@
 ! Version: 201312251755
 ! Title: Paul Schreiber's list
 ! Last modified: 25 Dec 2013 17:55 UTC
-! Expires: 4 days (update frequency)
+! Expires: 1 day (update frequency)
 @@|http://video.canadiens.nhl.com/videocenter/console?$document
 @@||advisors.tivo.com/$document
 @@||www.49ers.com/media-gallery/$document
