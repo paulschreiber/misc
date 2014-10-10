@@ -9,6 +9,7 @@ function srcup ()
 		pwd
 		if [ -d .git ]; then
 			git pull
+			git submodule update --recursive
 			git remote prune origin
 		fi
 		if [ -d .svn ]; then
