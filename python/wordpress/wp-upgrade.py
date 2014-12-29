@@ -2,9 +2,9 @@
 
 ## WordPress batch upgrade
 ## Inspired by Scot Hacker <http://birdhouse.org/>
-## 
+##
 ## Paul Schreiber <misc at paulschreiber dot com>
-## http://paulschreiber.com/
+## https://paulschreiber.com/
 ## 1.0  -- 3 January 2011
 ## 1.01 -- 3 January 2011; fixed Akismet copying
 ## 1.1  -- 3 January 2011; refactoring; require root
@@ -12,6 +12,8 @@
 ##  * can specify --akismet-only or --wordpress-only
 ##  * suppress notifications with --quiet
 ##  * now use --path for path
+## 1.3 -- 29 December 2014:
+##  * use https URLs
 ##
 ## Licensed under the MIT License
 ##
@@ -37,20 +39,20 @@ def read_site_list(sites_path):
 		if len(current_site_data) > 3 and current_site_data[0][0] != "#":
 			sites.append(current_site_data)
 	return sites
-			
+
 def send_email_notification(notice_path, recipient, wp_version, url):
 	notice_text = open(notice_path).read()
 	notice_text = notice_text.replace("__version__", wp_version)
 	notice_text = notice_text.replace("__recipient__", recipient)
 	notice_text = notice_text.replace("__url__", url)
-	
+
 	p = os.popen("%s -t" % sendmail, "w")
 	p.write(notice_text)
 	p.close()
 
 
 def fetch_wp(wp_version, temp_directory):
-	wp_svn_url = "http://svn.automattic.com/wordpress/tags/%s/" % (wp_version)
+	wp_svn_url = "https://svn.automattic.com/wordpress/tags/%s/" % (wp_version)
 	os.chdir(temp_directory)
 	print "Fetching %s" % (wp_svn_url)
 	commands.getoutput("%s export '%s'" % (svn, wp_svn_url))
@@ -66,32 +68,32 @@ def install_wp(site_path, wp_src_path, user):
 	# existing (old) copy of WordPress
 	site_wp_include_path = "%s/wp-includes" % (site_path)
 	site_wp_admin_path   = "%s/wp-admin"    % (site_path)
-	
+
 	## replace wp-includes and wp-admin
 	if os.path.exists(site_wp_include_path): shutil.rmtree(site_wp_include_path)
 	if os.path.exists(site_wp_admin_path):   shutil.rmtree(site_wp_admin_path)
 	shutil.copytree(wp_admin_src_path, site_wp_admin_path)
 	shutil.copytree(wp_include_src_path, site_wp_include_path)
-	
+
 	## replace WordPress .php files
 	commands.getoutput("cp -rf %s/*.php '%s'" % (wp_src_path, site_path))
 	# print "cp -rf '%s/*.php' '%s'" % (wp_src_path, site_path)
-	
+
 	## create the upload directory, if needed
 	upload_path = "%s/wp-content/uploads" % (site_path)
 	if not os.path.exists(upload_path): os.makedirs(upload_path)
-	
+
 	## fix permissions
 	commands.getoutput("chown -R %s:%s '%s'" % (user, user, site_path))
 	commands.getoutput("chown -R %s:www-data '%s/wp-content/uploads'" % (user, site_path))
 	commands.getoutput("chgrp -R g+w '%s/wp-content/uploads'" % (site_path))
-	
+
 	# print "chown -R %s:%s '%s'" % (user, user, site_path)
 	# print "chown -R %s:www-data '%s/wp-content/uploads'" % (user, site_path)
 	# print "chgrp -R g+w '%s/wp-content/uploads'" % (site_path)
 
 def fetch_akismet(temp_directory):
-	akismet_svn_url = "http://plugins.svn.wordpress.org/akismet/trunk"
+	akismet_svn_url = "https://plugins.svn.wordpress.org/akismet/trunk"
 	os.chdir(temp_directory)
 	print "Fetching %s" % (akismet_svn_url)
 	commands.getoutput("%s export '%s'" % (svn, akismet_svn_url))
@@ -124,7 +126,7 @@ def main():
 		wp_version = sys.argv[1]
 	else:
 		wp_version = None
-		
+
 	for o, a in opts:
 		if o in ("-q", "--quiet"):
 			notify = False
@@ -143,7 +145,7 @@ def main():
 
 	if wp_version == None:
 		usage()
-		
+
 	if wordpress == False and akismet == False:
 		print "You must install either WordPress or Akismet."
 		exit()
@@ -151,7 +153,7 @@ def main():
 	##
 	## Confirm the existence of required files
 	##
-	
+
 	script_path     = os.getcwd()
 
 	notice_path     = "%s/wp-upgrade.txt" % (script_path)
@@ -168,7 +170,7 @@ def main():
 	## If --path is specified, assume the sources are there
 	## Otherwise, create a temp directory and fetch the sources
 	##
-	
+
 	remove_temp_directory = True
 	temp_directory = None
 
