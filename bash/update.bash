@@ -18,3 +18,18 @@ function srcup ()
 	done
 	popd
 }
+
+function toolsup()
+{
+  if [[ $EUID -ne 0 ]]; then
+     echo "This script must be run as root."
+     return
+  fi
+
+  npm update -g
+  pear update-channels
+  pear upgrade-all
+  gem update --system
+  gem update
+  pip freeze --local | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip install -U
+}
