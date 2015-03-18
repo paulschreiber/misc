@@ -1,4 +1,3 @@
-paul@green:/tmp$ cat /tmp/tinypng.rb 
 #!/usr/bin/ruby -w
 
 #
