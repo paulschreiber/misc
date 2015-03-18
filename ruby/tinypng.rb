@@ -25,7 +25,12 @@ File.exist?(dst) or fail("Output folder does not exist: " + dst)
 Dir.chdir(src)
 Dir.glob('*.{png,jpg}') do |png_file|
 	if File.exist?("#{dst}/#{png_file}")
-		puts "skipping #{dst}/#{png_file}"
+		puts "Skipping (already compressed) #{dst}/#{png_file}"
+		next
+	end
+
+	if File.zero?(png_file)
+		puts "Skipping (empty file) #{png_file}"
 		next
 	end
 
