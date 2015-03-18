@@ -1,4 +1,4 @@
-paul@green:/tmp$ cat /tmp/tinypng.rb 
+paul@green:/tmp$ cat /tmp/tinypng.rb
 #!/usr/bin/ruby -w
 
 #
@@ -29,20 +29,20 @@ Dir.glob('*.{png,jpg}') do |png_file|
 		next
 	end
 
-    puts "\nOptimizing #{png_file}"
+	puts "\nOptimizing #{png_file}"
 
-    # Optimize and deflate both images.
-    cmd = "curl -s -u api:#{apikey} --data-binary @#{png_file} 'https://api.tinypng.com/shrink'"
-    puts cmd
-    r = JSON.parse `#{cmd}`
-    if r['error']
-        puts "TinyPNG Error: #{r['message']} (#{r['error']})"
-        exit(1)
-    end
-    url = r['output']['url']
-    cmd = "curl -s '#{url}' -o #{dst}/#{png_file}"
-    puts cmd
-    `#{cmd}`
+	# Optimize and deflate both images.
+	cmd = "curl -s -u api:#{apikey} --data-binary @#{png_file} 'https://api.tinypng.com/shrink'"
+	puts cmd
+	r = JSON.parse `#{cmd}`
+	if r['error']
+		puts "TinyPNG Error: #{r['message']} (#{r['error']})"
+		exit(1)
+	end
+	url = r['output']['url']
+	cmd = "curl -s '#{url}' -o #{dst}/#{png_file}"
+	puts cmd
+	`#{cmd}`
 end
 Dir.chdir("..")
 
