@@ -31,5 +31,6 @@ function toolsup()
   pear upgrade-all
   gem update --system
   gem update
+  gem cleanup
   pip freeze --local | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip install -U
 }
