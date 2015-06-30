@@ -8,11 +8,13 @@ function srcup ()
 		cd ${SRCDIR}/$i
 		pwd
 		if [ -d .git ]; then
+      git fetch --all
 			git pull
 			git submodule update --recursive
 			git remote prune origin
 		fi
 		if [ -d .svn ]; then
+			svn upgrade
 			svn update
 		fi
 	done
