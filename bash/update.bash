@@ -30,9 +30,11 @@ function toolsup()
 
   npm update -g
   pear update-channels
+  pear upgrade pear
   pear upgrade-all
   gem update --system
   gem update
   gem cleanup
+  pip install --upgrade pip
   pip freeze --local | grep -v '^\-e' | cut -d = -f 1  | xargs -n1 pip install -U
 }
