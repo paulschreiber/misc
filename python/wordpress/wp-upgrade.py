@@ -87,6 +87,8 @@ def install_wp(site_path, wp_src_path, user):
 	commands.getoutput("chown -R %s:%s '%s'" % (user, user, site_path))
 	commands.getoutput("chown -R %s:www-data '%s/wp-content/uploads'" % (user, site_path))
 	commands.getoutput("chgrp -R g+w '%s/wp-content/uploads'" % (site_path))
+	commands.getoutput("chown -R %s:www-data '%s/wp-content/cache'" % (user, site_path))
+	commands.getoutput("chgrp -R g+w '%s/wp-content/cache'" % (site_path))
 
 	# print "chown -R %s:%s '%s'" % (user, user, site_path)
 	# print "chown -R %s:www-data '%s/wp-content/uploads'" % (user, site_path)
