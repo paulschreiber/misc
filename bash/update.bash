@@ -8,7 +8,7 @@ function srcup ()
 		cd ${SRCDIR}/$i
 		pwd
 		if [ -d .git ]; then
-      git fetch --all
+			git fetch --all
 			git pull
 			git submodule update --recursive
 			git remote prune origin
