@@ -14,7 +14,8 @@
 ##  * now use --path for path
 ## 1.3 -- 29 December 2014:
 ##  * use https URLs
-##
+## 1.4 -- 21 September 2017:
+##  * check for subversion binary
 ## Licensed under the MIT License
 ##
 ##
@@ -150,6 +151,10 @@ def main():
 
 	if wordpress == False and akismet == False:
 		print "You must install either WordPress or Akismet."
+		exit()
+		
+	if not os.path.isfile(svn):
+		print "Subversion is not installed at [%s]" % (svn)
 		exit()
 
 	##
