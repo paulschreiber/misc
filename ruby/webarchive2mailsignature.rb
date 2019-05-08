@@ -38,7 +38,7 @@ web_archives.each do |current_archive|
   #{content}
 SIGNATURE
 
-  output_file = wa.gsub('webarchive', 'mailsignature')
+  output_file = current_archive.gsub('webarchive', 'mailsignature')
   File.open(output_file, 'w') do |file|
     file.write(message)
   end
